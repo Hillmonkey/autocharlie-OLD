@@ -1,0 +1,133 @@
+
+admin.py
+	A bunch of functions to work with imported weekly schedule.  Not sure what is
+	actually used by running code.  I need to look at the cron job on the archvier
+	VM to see how code is kicked off.
+	When this function's main routine is kicked off, it grabs a weekly schedule 
+	that has already been pickle-ized.  Then it builds a shortened schedule for 
+	testing purposes
+	Uses SPlib.BuildDJList ...
+
+archiver_script
+	cron runs this script, this script runs archiver, if there is an error,
+	pipeEmail.py is called to email someone about the bad news ...
+	I know there are two paths to sending out the bad news that I have explored ..
+
+AutoCharlie.py
+	This file started as pseudocode and didn't really go any further than that.
+	But it did function as a roadmap for the project.
+	The idea of cron job B (checking on the success of cron job A) is a good idea,
+	but it hasn't been implemented (as of March 2017). If cron job B is running on
+	the same machine as cron job A, then do you really get visibility to 
+	jobs that haven't run yet???
+
+ftpSetup.py
+	As the comment at the top says, ftpSetup is largely a copy of WeeklyCron.py.
+	Not sure where I was going with this ...
+
+ftptest.py
+	This just looks like a way to test out ftplib, and establish that connectivity
+	is possible.  This can probably be tossed.
+	Also, this code uses ftp instead of sftp.  We've upgraded to sftp!!!
+
+HourlyCron.py
+	90% of the magic is executed in or called from the main function of this file.
+	The mail function is pretty self-descriptive (at least to me ...)
+
+HourlyCronTest.py
+	The stated purpose of this file is to test the archiver script and run
+	separately from the mail HourlyCron.  Both jobs have been running for a long
+	time now, both successfully it seems ...
+	By calling necessary functions contained in HourlyCron, this version is much 
+	shorter.  On one level, the functions in HourlyCron.py could be considered
+	library functions, to be called by another program.
+
+myClasses.py
+	This file contains code designed to extend the schema of the weekly schedule 
+	as received from Spinitron, mainly to be able to specify rules for how 
+	different shows alternate with each other in the same time slot.  This
+	functionality is not implemented, thus making the coding task easier.
+
+There are some pickle files and a couple of folders (PickleArchive and
+	PickleCurrent) that contain serialized versions of the weekly schedule 
+	object that is received from Spinitron.  This serves as a poor man's 
+	version of a database, in the MongoDB style, not a SQL style.
+
+pipeEmail.py
+	This sends an email of whatever text is piped into it, it could be upgraded
+	to have a list of recipients, and send the email to all the recipients.  Maybe
+	Dave has modified it to do so, or he could have modified the environment on
+	the archiver VM to ensure that he also recieves email notifications when
+	errors occur during autocharlie code execution ...
+
+SideJobs
+	In this folder, there are some links back to necessary folders in the main
+	folder. And, also, there the NNN-cron.py job, which can serve as a template
+	for all other side jobs, like the one that Terry wants to set up.  We also
+	need to take a look at how the cron job is built, and to focus on which lines
+	in this code would need to be changed to create a separate job
+
+SideJobs/NNN-cron.py
+	I have added some comments to help someone using this file as a template to
+	create another side job.  I'm inclined to hand over the first 15-20 minutes
+	of each hour to let the main hourlycron.py job run.  I am concerned about
+	multiple jobs running simultaniously and crashing the archiver VM. This is
+	why I try to avoid overlapping cron jobs, knowing that a typical autocharlie
+	job takes 10-15 minutes, beginning to end.
+
+SimpleCron.py
+	Not sure what I'm trying to achieve with this file.  It does some stuff
+	but I really don't think that other programs depend on it.
+
+SpinPapiClient.py
+	This code was supplied by Tom Worster, copyrights and such can be seen in the
+	comments at the top of the file.  I have not made any modifications to this 
+	file.  Of course, this file is necessary for any other file that interatcts
+	with the spinPapi API.
+
+SpinPapiLib.py
+	This code is pretty much called by everything else.  If I were better at using
+	vim to navigate long files, I would be happy, because this file has a bunch
+	of functions in it!!!
+
+testEmail.py
+	If I wasn't lazy I would look closer at distinctions between this file and 
+	pipeEmail.py  I suspect that this could probably be deleted ...
+
+UploadArchiveCron.py
+	As I recall, I tried to use this program to upload a bunch of archive programs
+	the last time that AutoCharlie bombed due to someone changing the password
+	where our website is hosted. *cough* *cough*
+	If you look at the code toward the bottom of the file, you can see how simple
+	and clear the repetitive code is that was used to archive the various shows
+	that needed archiving at that time.
+	Sad to say, it would only load 2-3 archive files before it bombed. So what 
+	should have a been a glorious victory for automation became a reversion to 
+	tedious chores.
+	I am going to speculate that the program was bombing due to multiple archiver
+	jobs using up RAM in the VM, or perhaps FTP jobs were stomping on each other
+	... not really sure ...
+	I will say that most of this file was copied and pasted from maybe SPL,
+	getting to the bottom of this and having one true source for all of these 
+	copy-n-pasted files is a necessary step toward cleaning up this folder!!!!
+
+UploadArchiveLib.py
+	I might have been thinking something, but I'm not sure what it was.  This file
+	is a dupe of UploadArchiveCron.py.  I imagine my original goal was to
+	contain functionality in the lib file, so that the cron file would be short
+	and sweet.  It obviously didn't happen.
+
+UploadArchive.py
+	OK, here is the short and sweet version.  This makes me happy (as long as it
+	runs correctly!)  But to make it run correctly, I think there should be a
+	job queue implemented in SQLite or MongoDB, running on a separate machine.
+
+WeeklyCron.py
+	This code has been running seemlessly (AFAIK) from the get-go. It grabs 
+	updates of the spinitron schedule using the SpinPapiClient.  It's called
+	"weekly" but I'm pretty sure we have the cron job set up to run more often
+	then that.
+
+TODO's
+	* change the password in the key.py file so that AutoCharlie gets its own
+		account ... I think I have a copy of that password set aside ...
