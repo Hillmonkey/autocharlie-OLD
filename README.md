@@ -9,7 +9,6 @@ Coded using Python 2.7
 * Based on weekly schedule, create and update audio archives of radio programs
 
 * Version < 1.0 as of 11/30/2015
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo) --not yet!
 
 ### How do I get set up? ###
 
