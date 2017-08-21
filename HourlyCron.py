@@ -17,12 +17,6 @@ A good start on fixing this would be to disambiguate the following:
     spinday of show end
 ##############################
 
-#TODO: define CharlieSched format:
-    dict of days, keys = fullDayString
-        value is a dict
-            keys = OffairTime-OnairTime (ex: '08:00:00-06:00:00' )
-                OffairTime: 08:00:00
-                OnairTime:
 example:                
 {'Tuesday': {u'08:00:00-06:00:00': 
 	{'OffairTime': u'08:00:00', 
@@ -32,8 +26,8 @@ example:
      }
 }
 
-# FIRST, MOST BASIC ITERATION
------------------------------
+# What HourlyCron Does
+----------------------
 
 * Grab startDelta and endDelta from local.py
 
@@ -60,25 +54,6 @@ example:
 
 #TODO: Fix that Chris & Larry show is in ShowList, but not Sonic Landscapes
 """
-
-#@contextmanager
-def stdout_redirector(stream):
-    '''
-    see:
-        http://eli.thegreenplace.net/2015/redirecting-all-kinds-of-stdout-in-python/
-    example code using stdout_redirector:
-        f = io.StringIO()
-        with stdout_redirector(f):
-            print('foobar')
-            print(12)
-        print('Got stdout: "{0}"'.format(f.getvalue()))
-    '''
-    old_stdout = sys.stdout
-    sys.stdout = stream
-    try:
-        yield
-    finally:
-        sys.stdout = old_stdout
 
 
 def getCharlieSched():
